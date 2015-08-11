@@ -8,9 +8,10 @@ ENV NPM_VERSION 2.11.1
 
 ENV REQUIREMENTS "curl  gcc libc6-dev libsqlite3-dev libssl-dev make xz-utils zlib1g-dev"
 
-# http://bugs.python.org/issue19846
-# > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-ENV LANG C.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
 
 # remove several traces of debian python
 RUN apt-get purge -y python.*
@@ -21,7 +22,11 @@ RUN apt-get update && \
         git \
         ca-certificates \
         libsqlite3-0 \
-        libssl1.0.0
+        libssl1.0.0 \
+        locales && \
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+    locale-gen en_US.utf8 && \
+    /usr/sbin/update-locale LANG=en_US.UTF-8
 
 RUN mkdir -p /usr/src/python && \
     curl -SL "https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tar.xz" \
