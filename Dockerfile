@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM python:3.8-rc
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -8,21 +8,17 @@ RUN \
         libblas-dev \
         liblapack-dev \
         libatlas-base-dev \
-        gfortran
+        gfortran \
+        python-dev
 
+RUN pip install cython
+RUN pip install git+https://github.com/numpy/numpy
+RUN pip install git+https://github.com/pandas-dev/pandas
+# RUN pip install git+https://github.com/scipy/scipy
+RUN pip install scipy
+RUN pip install git+https://github.com/sympy/sympy.git
 
-RUN set -ex; \
-    \
-    wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py'; \
-    \
-    python get-pip.py \
-        --no-cache-dir \
-    ; \
-    rm -f get-pip.py
-
-RUN pip install cython numpy pandas scipy sympy
-
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
     apt-get -y --no-install-recommends install nodejs 
 
 RUN apt-get autoremove -y && \
